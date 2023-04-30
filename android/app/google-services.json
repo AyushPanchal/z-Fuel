@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "458743023286",
+    "project_id": "z-fuel",
+    "storage_bucket": "z-fuel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:458743023286:android:881b4026a65342a339c817",
+        "android_client_info": {
+          "package_name": "com.zfuel.zfuel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "458743023286-tknjfvinfufuvahag0a8uu4rrs1ccoft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz-i2M0gOT_7zxz_dJ8H6GM6jej2u9WWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "458743023286-tknjfvinfufuvahag0a8uu4rrs1ccoft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
