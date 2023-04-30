@@ -9,7 +9,7 @@ class AppRoutes {
   static List<GetPage> getPages = [
     GetPage(
       name: '/',
-      page: () => const OrderSummaryPage(),
+      page: () => const FleetDriverPage(),
       transition: _transition,
       transitionDuration: _duration,
     ),
