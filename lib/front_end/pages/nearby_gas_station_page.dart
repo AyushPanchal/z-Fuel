@@ -1,6 +1,7 @@
 import 'package:zfuel/export_all.dart';
 
 class NearbyGasStationPage extends StatefulWidget {
+  static const String id = "/NearbyGasStationPage";
   const NearbyGasStationPage({Key? key}) : super(key: key);
 
   @override
@@ -12,8 +13,9 @@ class _NearbyGasStationPageState extends State<NearbyGasStationPage> {
 
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(22.9978, 72.6660),
+
+  final CameraPosition _kGooglePlex = CameraPosition(
+    target: MapHelper.userLocation,
     zoom: 14.4746,
   );
 
@@ -27,14 +29,19 @@ class _NearbyGasStationPageState extends State<NearbyGasStationPage> {
         ),
         child: Stack(
           children: [
-            GoogleMap(
-              zoomControlsEnabled: false,
-              mapType: MapType.normal,
-              initialCameraPosition: _kGooglePlex,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-            ),
+            StreamBuilder<Set<Marker>>(
+                stream: _firestoreController.markersController.stream,
+                builder: (context, snapshot) {
+                  return GoogleMap(
+                    zoomControlsEnabled: false,
+                    mapType: MapType.normal,
+                    initialCameraPosition: _kGooglePlex,
+                    markers: MapHelper.petrolPumpMarkers,
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                    },
+                  );
+                }),
             Positioned(
               child: Padding(
                 padding: EdgeInsets.only(
@@ -131,8 +138,13 @@ class _NearbyGasStationPageState extends State<NearbyGasStationPage> {
                                 ),
                               ),
                             ),
-                            onPressed: () {},
-                            child: Text(
+                            onPressed: () {
+                              Get.toNamed(
+                                GasStationPage.id,
+                                arguments: snapshot.data![index],
+                              );
+                            },
+                            child: const Text(
                               'Order now',
                             ),
                           ),

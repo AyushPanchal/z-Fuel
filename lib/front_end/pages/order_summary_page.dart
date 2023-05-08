@@ -1,7 +1,7 @@
-import 'package:google_fonts/google_fonts.dart';
 import 'package:zfuel/export_all.dart';
 
 class OrderSummaryPage extends StatefulWidget {
+  static const String id = "/OrderSummaryPage";
   const OrderSummaryPage({Key? key}) : super(key: key);
 
   @override
@@ -9,8 +9,18 @@ class OrderSummaryPage extends StatefulWidget {
 }
 
 class _OrderSummaryPageState extends State<OrderSummaryPage> {
+  final MapController _mapController = Get.find();
+  final data = Get.arguments;
+  var companyCharges = 10.0;
+  var deliveryCharges = 21.0;
+  double roundOfAmount = 0.0;
   @override
   Widget build(BuildContext context) {
+    roundOfAmount = double.parse(
+        (((data['price'] + companyCharges + deliveryCharges).round()) -
+                (data['price'] + companyCharges + deliveryCharges))
+            .toStringAsFixed(2));
+
     return Scaffold(
       /*=====Horizontal Stepper=====*/
       appBar: PreferredSize(
@@ -25,7 +35,11 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
           ),
           child: Row(
             children: <Widget>[
-              const FaIcon(FontAwesomeIcons.arrowLeft),
+              GestureDetector(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: const FaIcon(FontAwesomeIcons.arrowLeft)),
               SizedBox(
                 width: AppDimensions.height20,
               ),
@@ -124,7 +138,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                 SizedBox(
                   width: AppDimensions.height200,
                   child: Text(
-                    'Nr. Gh-2 Circle, Gh Road Gandhinagar 382007, Gujarat',
+                    _mapController.fullAddress.value,
                     style: GoogleFonts.inter(color: AppColors.kLightTextColor),
                   ),
                 ),
@@ -190,7 +204,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                       AppThemes.kSizedBoxHeight10,
                       Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: AppDimensions.height15,
+                          horizontal: AppDimensions.height5,
                           vertical: AppDimensions.height10,
                         ),
                         decoration: BoxDecoration(
@@ -200,6 +214,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                           border: Border.all(color: AppColors.kRoadColor),
                         ),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
                               'Qty.',
@@ -209,7 +224,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                               ),
                             ),
                             Text(
-                              '1.0 ltr.',
+                              "${data['quantity'].toString()}/ ltr",
                               style: AppThemes.kNormalTextForm.copyWith(
                                 color: AppColors.kRoadColor,
                                 fontWeight: FontWeight.bold,
@@ -261,7 +276,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                           size: AppDimensions.height20 + AppDimensions.height5,
                         ),
                         Text(
-                          '100.2',
+                          '${data['price'] + roundOfAmount + companyCharges + deliveryCharges}',
                           style: GoogleFonts.inter(
                             fontSize: 28,
                             fontWeight: FontWeight.w500,
@@ -306,7 +321,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Price (1 ltr)',
+                          'Price (${data['quantity']} ltr)',
                           style: AppThemes.kSmallText,
                         ),
                         Row(
@@ -316,7 +331,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                               size: AppDimensions.height15,
                             ),
                             Text(
-                              '100.2',
+                              '${data['price']}',
                               style: AppThemes.kSmallText,
                             ),
                           ],
@@ -328,7 +343,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Addon charges',
+                          'Company charges',
                           style: AppThemes.kSmallText,
                         ),
                         Row(
@@ -338,7 +353,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                               size: AppDimensions.height15,
                             ),
                             Text(
-                              '30.0',
+                              companyCharges.toString(),
                               style: AppThemes.kSmallText,
                             ),
                           ],
@@ -360,7 +375,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                               size: AppDimensions.height15,
                             ),
                             Text(
-                              '30.0',
+                              deliveryCharges.toString(),
                               style: AppThemes.kSmallText,
                             ),
                           ],
@@ -384,7 +399,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                               size: AppDimensions.height15,
                             ),
                             Text(
-                              '-0.2',
+                              "${roundOfAmount}",
                               style: AppThemes.kSmallText.copyWith(
                                 color: AppColors.kRoadColor.withOpacity(0.5),
                               ),
@@ -415,7 +430,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                               size: AppDimensions.height15,
                             ),
                             Text(
-                              '130.0',
+                              "${data['price'] + roundOfAmount + companyCharges + deliveryCharges}",
                               style: AppThemes.kSmallText,
                             ),
                           ],

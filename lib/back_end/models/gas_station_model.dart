@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 GasStationModel gasStationModelFromJson(String str) =>
     GasStationModel.fromJson(json.decode(str));
 
@@ -18,15 +20,19 @@ class GasStationModel {
     this.city,
     this.zipCode,
     this.email,
+    this.location,
     this.phoneNumber,
     this.fleetCapacity,
     this.fleetAvailability,
     this.orderHistory,
+    this.gasStationImageURL,
   });
 
   String? gasStationId;
+  String? gasStationImageURL;
   String? name;
   String? area;
+  GeoPoint? location;
   String? city;
   String? zipCode;
   String? email;
@@ -38,7 +44,9 @@ class GasStationModel {
   factory GasStationModel.fromJson(Map<String, dynamic> json) =>
       GasStationModel(
         gasStationId: json["gasStationID"],
+        gasStationImageURL: json["gasStationImageURL"],
         name: json["name"],
+        location: json['location'],
         area: json["area"],
         city: json["city"],
         zipCode: json["zipCode"],
@@ -56,6 +64,8 @@ class GasStationModel {
         "gasStationID": gasStationId,
         "name": name,
         "area": area,
+        "location": location,
+        "gasStationImageURL": gasStationImageURL,
         "city": city,
         "zipCode": zipCode,
         "email": email,

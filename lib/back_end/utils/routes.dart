@@ -1,15 +1,14 @@
 import 'package:zfuel/export_all.dart';
 import 'package:zfuel/front_end/pages/nearby_gas_station_page.dart';
-import 'package:zfuel/front_end/pages/order_summary_page.dart';
 
 class AppRoutes {
   static const Transition _transition = Transition.circularReveal;
-  static const Duration _duration = Duration(seconds: 2);
+  static const Duration _duration = Duration(seconds: 1);
 
   static List<GetPage> getPages = [
     GetPage(
       name: '/',
-      page: () => const FleetDriverPage(),
+      page: () => const OnboardingPage(),
       transition: _transition,
       transitionDuration: _duration,
     ),
@@ -28,6 +27,30 @@ class AppRoutes {
     GetPage(
       name: HomePage.id,
       page: () => const HomePage(),
+      transition: _transition,
+      transitionDuration: _duration,
+    ),
+    GetPage(
+      name: FuelChoicePage.id,
+      page: () => const FuelChoicePage(),
+      transition: _transition,
+      transitionDuration: _duration,
+    ),
+    GetPage(
+      name: NearbyGasStationPage.id,
+      page: () => const NearbyGasStationPage(),
+      transition: _transition,
+      transitionDuration: _duration,
+    ),
+    GetPage(
+      name: GasStationPage.id,
+      page: () => const GasStationPage(),
+      transition: _transition,
+      transitionDuration: _duration,
+    ),
+    GetPage(
+      name: OrderSummaryPage.id,
+      page: () => const OrderSummaryPage(),
       transition: _transition,
       transitionDuration: _duration,
     ),

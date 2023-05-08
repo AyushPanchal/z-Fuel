@@ -1,6 +1,8 @@
 import 'package:zfuel/export_all.dart';
+import 'package:zfuel/front_end/pages/nearby_gas_station_page.dart';
 
 class FuelChoicePage extends StatefulWidget {
+  static const String id = '/fuel_choice_page_id';
   const FuelChoicePage({Key? key}) : super(key: key);
 
   @override
@@ -8,17 +10,15 @@ class FuelChoicePage extends StatefulWidget {
 }
 
 class _FuelChoicePageState extends State<FuelChoicePage> {
-  LatLng? latLong;
   @override
   void initState() {
-    HttpHelper.fetchPetrolPrices();
     super.initState();
   }
 
+  bool isMapDataAvailable = false;
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   final MapController _mapController = Get.find();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,14 +29,16 @@ class _FuelChoicePageState extends State<FuelChoicePage> {
           fit: StackFit.expand,
           children: [
             /*=====Google map=====*/
-            FutureBuilder<LatLng>(
-              future: MapHelper.getUserLocation(),
+            StreamBuilder<LatLng>(
+              stream: MapHelper.getUserLocationStream(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData && snapshot.data != null) {
+                  isMapDataAvailable = true;
+                  MapHelper.userLocation = snapshot.data!;
                   return GoogleMap(
                     zoomControlsEnabled: false,
                     mapType: MapType.normal,
@@ -249,7 +251,18 @@ class _FuelChoicePageState extends State<FuelChoicePage> {
                               vertical: AppDimensions.height15,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (isMapDataAvailable) {
+                              Get.toNamed(
+                                NearbyGasStationPage.id,
+                              );
+                            } else {
+                              showSnackBar(
+                                "Wait!",
+                                "Let us fetch your location.",
+                              );
+                            }
+                          },
                           child: Text(
                             'CONTINUE',
                             style: GoogleFonts.inter(

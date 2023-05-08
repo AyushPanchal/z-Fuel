@@ -21,7 +21,9 @@ class AuthController extends GetxController {
 
   /*=====CHECK IF THE USER IS LOGGED IN OR NOT=====*/
   _setInitialScreen(User? user) {
-    user == null ? Get.offAllNamed('/') : Get.offAllNamed(HomePage.id);
+    user == null
+        ? Get.offAllNamed(OnboardingPage.id)
+        : Get.offAllNamed(FuelChoicePage.id);
   }
 
   /*=====METHOD TO REGISTER A NEW USER USING EMAIL AND PASSWORD=====*/
@@ -37,7 +39,8 @@ class AuthController extends GetxController {
       )
           .then((value) {
         isLoading.value = false;
-        Get.offAllNamed(HomePage.id);
+        /*=====Forward user to HomePage=====*/
+        Get.offAllNamed(FuelChoicePage.id);
         return value;
       });
       isLoading.value = false;
@@ -94,7 +97,7 @@ class AuthController extends GetxController {
         password: password,
       );
 
-      Get.to(() => const HomePage());
+      // Get.toNamed(FuelChoicePage.id);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         // Handle user not found error

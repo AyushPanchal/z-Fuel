@@ -1,6 +1,7 @@
 import 'package:zfuel/export_all.dart';
 
 class GasStationPage extends StatefulWidget {
+  static const String id = '/GasStationPage';
   const GasStationPage({Key? key}) : super(key: key);
 
   @override
@@ -9,8 +10,30 @@ class GasStationPage extends StatefulWidget {
 
 class _GasStationPageState extends State<GasStationPage> {
   int selectedIndex = 0;
-  double quantity = 2;
+  double quantity = 1;
   double price = 100;
+  double petrolPrice = 0.0;
+  bool isPetrolPriceFetched = false;
+
+  ///data coming from NearbyGasStationPage
+  GasStationModel snapshot = Get.arguments;
+
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
+  getData() async {
+    var data = await HttpHelper.fetchPetrolPrices();
+    setState(() {
+      if (data.isNotEmpty) {
+        isPetrolPriceFetched = true;
+      }
+      price = data['Ahmedabad'];
+      petrolPrice = data['Ahmedabad'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,27 +52,39 @@ class _GasStationPageState extends State<GasStationPage> {
                     AppDimensions.radius20 + AppDimensions.radius15,
                   ),
                 ),
-                child: Image.asset(
-                  'assets/images/indian_oil.jpg',
-                  height: AppDimensions.height250,
-                  width: AppDimensions.deviceWidth,
-                  fit: BoxFit.cover,
-                ),
+                child: snapshot.gasStationImageURL!.isEmpty
+                    ? Image.asset(
+                        'assets/images/gas_station_image.jpg',
+                        height: AppDimensions.height250,
+                        width: AppDimensions.deviceWidth,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.network(
+                        snapshot.gasStationImageURL!,
+                        height: AppDimensions.height250,
+                        width: AppDimensions.deviceWidth,
+                        fit: BoxFit.cover,
+                      ),
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: AppDimensions.height20,
-                  top: AppDimensions.height40,
-                ),
-                child: Container(
-                  padding: EdgeInsets.all(AppDimensions.height10),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.7),
-                    shape: BoxShape.circle,
+              GestureDetector(
+                onTap: () {
+                  Get.back();
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: AppDimensions.height20,
+                    top: AppDimensions.height40,
                   ),
-                  child: const FaIcon(
-                    FontAwesomeIcons.arrowLeft,
-                    color: Colors.black,
+                  child: Container(
+                    padding: EdgeInsets.all(AppDimensions.height10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.7),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const FaIcon(
+                      FontAwesomeIcons.arrowLeft,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -66,10 +101,11 @@ class _GasStationPageState extends State<GasStationPage> {
                 // vertical: AppDimensions.height20,
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /*=====Gas station name and Location=====*/
                   Text(
-                    'Indian Oil Petrol Pump - Vijay Automobiles Gandhinagar.',
+                    '${snapshot.name} - ${snapshot.area}, ${snapshot.city}',
                     style: TextStyle(
                       fontSize: 26,
                     ),
@@ -110,7 +146,7 @@ class _GasStationPageState extends State<GasStationPage> {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          'Petrol Pump in Gandhinagar, Gujarat',
+                          'Petrol Pump in ${snapshot.area}, ${snapshot.city}',
                           style: AppThemes.kNormalTextForm,
                         ),
                       ),
@@ -121,7 +157,9 @@ class _GasStationPageState extends State<GasStationPage> {
                         height: AppDimensions.height5,
                         width: AppDimensions.height5,
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.green),
+                          shape: BoxShape.circle,
+                          color: Colors.green,
+                        ),
                       ),
                       SizedBox(
                         width: AppDimensions.height5,
@@ -175,7 +213,7 @@ class _GasStationPageState extends State<GasStationPage> {
                     flex: 1,
                     child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      itemCount: 5,
+                      itemCount: 1,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: EdgeInsets.symmetric(
@@ -250,7 +288,7 @@ class _GasStationPageState extends State<GasStationPage> {
                                               AppDimensions.height5,
                                         ),
                                         Text(
-                                          '99.20/',
+                                          '$price/',
                                           style: GoogleFonts.inter(
                                             color: selectedIndex == index
                                                 ? Colors.white
@@ -324,8 +362,7 @@ class _GasStationPageState extends State<GasStationPage> {
                                             showDialog(
                                               context: context,
                                               builder: (context) {
-                                                quantity =
-                                                    2.5; // default quantity
+                                                // default quantity
                                                 return AlertDialog(
                                                   title: const Text(
                                                     'Enter Quantity',
@@ -340,15 +377,17 @@ class _GasStationPageState extends State<GasStationPage> {
                                                         TextInputType.number,
                                                     onChanged: (value) {
                                                       try {
-                                                        if (value.length < 5) {
+                                                        if (value.length < 3) {
                                                           setState(() {
                                                             quantity =
                                                                 double.parse(
-                                                              value,
-                                                            );
+                                                                    value);
+                                                            petrolPrice = double
+                                                                .parse((quantity *
+                                                                        price)
+                                                                    .toStringAsFixed(
+                                                                        2));
                                                           });
-
-                                                          ;
                                                         }
                                                       } catch (e) {}
                                                     },
@@ -380,7 +419,7 @@ class _GasStationPageState extends State<GasStationPage> {
                                                       AppDimensions.height10,
                                                 ),
                                                 child: Text(
-                                                  '$quantity Ltr',
+                                                  '${quantity.toStringAsFixed(2)} / ltr',
                                                   style: AppThemes
                                                       .kOnboardingTextTheme
                                                       .copyWith(
@@ -426,7 +465,6 @@ class _GasStationPageState extends State<GasStationPage> {
                                         showDialog(
                                           context: context,
                                           builder: (context) {
-                                            price = 200; // default quantity
                                             return AlertDialog(
                                               title: Text('Enter Price'),
                                               content: TextField(
@@ -439,8 +477,13 @@ class _GasStationPageState extends State<GasStationPage> {
                                                   try {
                                                     if (value.length < 5) {
                                                       setState(() {
-                                                        price =
+                                                        petrolPrice =
                                                             double.parse(value);
+                                                        quantity = double.parse(
+                                                            (petrolPrice /
+                                                                    price)
+                                                                .toStringAsFixed(
+                                                                    2));
                                                       });
                                                     }
                                                   } catch (e) {}
@@ -456,6 +499,7 @@ class _GasStationPageState extends State<GasStationPage> {
                                                 TextButton(
                                                   onPressed: () {
                                                     // do something with the quantity
+
                                                     setState(() {});
                                                     Navigator.pop(context);
                                                   },
@@ -492,7 +536,7 @@ class _GasStationPageState extends State<GasStationPage> {
                                                       AppDimensions.height10,
                                                 ),
                                                 child: Text(
-                                                  '${price.round()}',
+                                                  '${(petrolPrice)}',
                                                   style: AppThemes
                                                       .kOnboardingTextTheme
                                                       .copyWith(
@@ -528,15 +572,24 @@ class _GasStationPageState extends State<GasStationPage> {
                           primary: AppColors.kRoadColor,
                           onPrimary: Colors.white,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          if (isPetrolPriceFetched) {
+                            Get.toNamed(OrderSummaryPage.id, arguments: {
+                              "quantity": quantity,
+                              "price": petrolPrice
+                            });
+                          } else {
+                            showSnackBar("Wait!", "Let us fetch prices.");
+                          }
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            FaIcon(FontAwesomeIcons.truckFast),
+                            const FaIcon(FontAwesomeIcons.truckFast),
                             SizedBox(
                               width: AppDimensions.height10,
                             ),
-                            Text('Ask for delivery')
+                            const Text('Ask for delivery')
                           ],
                         ),
                       ),

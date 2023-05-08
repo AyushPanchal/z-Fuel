@@ -16,6 +16,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final ValidationController _validationController = Get.find();
   final AuthDataController _authDataController = Get.find();
   final AuthController _authController = Get.find();
+  final FirestoreController _firestoreController = Get.find();
   bool showPassword = false;
   bool showConfirmPassword = false;
   final _formKey = GlobalKey<FormState>();
@@ -52,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AppThemes.kSizedBoxHeight50,
+                AppThemes.kSizedBoxHeight20,
                 //zFuel LOGO
                 Center(
                   child: Text(
@@ -60,13 +61,25 @@ class _SignUpPageState extends State<SignUpPage> {
                     style: AppThemes.kOnboardingTextThemeWithStroke,
                   ),
                 ),
-                AppThemes.kSizedBoxHeight50,
+                AppThemes.kSizedBoxHeight20,
                 //Create account text
                 Text(
                   'Create your Account',
                   style: AppThemes.kOnboardingSmallTextTheme.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
+                ),
+                AppThemes.kSizedBoxHeight20,
+                //full name field
+                CustomTextFormField(
+                  hintText: 'Full Name',
+                  leadingIcon: const FaIcon(
+                    FontAwesomeIcons.pencil,
+                    color: AppColors.kIconColor,
+                  ),
+                  controller: _authDataController.fullNameController,
+                  obscureText: false,
+                  keyboardType: TextInputType.name,
                 ),
                 AppThemes.kSizedBoxHeight20,
                 //Email field
@@ -169,10 +182,18 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        _authController.registerWithEmailAndPassword(
+                        _authController
+                            .registerWithEmailAndPassword(
                           _authDataController.email,
                           _authDataController.password,
-                        );
+                        )
+                            .then((value) {
+                          _firestoreController.createUser(UserModel(
+                            id: _authController.currentUser.value!.uid,
+                            email: _authDataController.email,
+                            fullName: _authDataController.fullName,
+                          ));
+                        });
                       }
                     },
                     child: Text(
@@ -201,7 +222,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.toNamed(SignUpPage.id);
+                        Get.toNamed(SignInPage.id);
                       },
                       child: Text(
                         "LOG IN",
