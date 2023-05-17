@@ -128,7 +128,7 @@ class _FuelChoicePageState extends State<FuelChoicePage> {
                             AppThemes.kSizedBoxHeight5,
                             Obx(
                               () => Text(
-                                _mapController.locationInText.value,
+                                _mapController.fullAddress.value,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),

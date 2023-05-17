@@ -1,4 +1,4 @@
------zFuel-----
+#zFuel
 
 Problem : What if your vehicles runs out of fuel on middle of trip and there's no gas station nearby?
 
@@ -24,7 +24,9 @@ Module :
 - Receive order from customer.
 - Approve customer request.
 - Launch fleet of fuel vehicles for the timely delivery of fuel.
-3. Admin
+3. Fleet driver
+- Receive/Approve/Reject requests
+4. Admin
 - Have access to the database and monitor activities.
 
 
@@ -58,13 +60,14 @@ User Model
             Fleet Model
             ------------------------------------------------------------------------
             - Vehicle ID
+            - FuelPump ID
+            - FuelPump Name
             - Driver Name
             - Driver Phone Number
             - Vehicle Type
             - Fuel Capacity
             - Location
             - Availability Status (Available/Unavailable)
-            - Order ID (if any)
 
             Gas Station Model
             ------------------------------------------------------------------------

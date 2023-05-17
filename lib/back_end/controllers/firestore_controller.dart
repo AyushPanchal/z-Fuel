@@ -5,6 +5,7 @@ import 'package:zfuel/export_all.dart';
 
 class FirestoreController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirestoreController instance = Get.find();
 
   final markersController = StreamController<Set<Marker>>.broadcast();
   /*=====CRUD FOR GAS STATION MODEL=====*/
@@ -23,7 +24,7 @@ class FirestoreController extends GetxController {
 
   /*=====READ FOR GAS STATION MODEL=====*/
   Stream<List<GasStationModel>> getGasStation() {
-    const double radius = 10.0;
+    const double radius = 5.0;
     final CollectionReference gasStationCollection =
         _firestore.collection('GasStationModel');
     return gasStationCollection
@@ -78,5 +79,27 @@ class FirestoreController extends GetxController {
     } catch (e) {
       print("Error ayigai $e");
     }
+  }
+
+  /*=====CRUD FOR FLEET DRIVER MODEL=====*/
+  /*=====READ FOR FLEET DRIVER MODEL=====*/
+  Stream<List<FleetDriverModel>> getFleetDriver() {
+    CollectionReference fleetDriverReference =
+        _firestore.collection('FleetDriverModel');
+
+    return fleetDriverReference.snapshots().map((snapshots) {
+      if (snapshots.docs.isEmpty) {
+        return [];
+      } else {
+        try {
+          return snapshots.docs
+              .map((doc) =>
+                  FleetDriverModel.fromJson(doc.data() as Map<String, dynamic>))
+              .toList();
+        } catch (e) {
+          return [];
+        }
+      }
+    });
   }
 }

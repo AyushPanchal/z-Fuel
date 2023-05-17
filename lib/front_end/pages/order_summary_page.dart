@@ -399,7 +399,7 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                               size: AppDimensions.height15,
                             ),
                             Text(
-                              "${roundOfAmount}",
+                              "$roundOfAmount",
                               style: AppThemes.kSmallText.copyWith(
                                 color: AppColors.kRoadColor.withOpacity(0.5),
                               ),
@@ -453,7 +453,22 @@ class _OrderSummaryPageState extends State<OrderSummaryPage> {
                       ),
                       primary: AppColors.kRoadColor,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(
+                        PaymentPage.id,
+                        arguments: {
+                          "quantity": data['quantity'],
+                          "price": data['price'],
+                          "companyCharges": companyCharges.toString(),
+                          "deliveryCharges": deliveryCharges.toString(),
+                          "roundOfAmount": roundOfAmount,
+                          "totalAmount": data['price'] +
+                              roundOfAmount +
+                              companyCharges +
+                              deliveryCharges
+                        },
+                      );
+                    },
                     child: Text(
                       'Continue',
                       style: AppThemes.kSmallText.copyWith(

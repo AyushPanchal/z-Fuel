@@ -54,5 +54,11 @@ class AppRoutes {
       transition: _transition,
       transitionDuration: _duration,
     ),
+    GetPage(
+      name: PaymentPage.id,
+      page: () => const PaymentPage(),
+      transition: _transition,
+      transitionDuration: _duration,
+    ),
   ];
 }

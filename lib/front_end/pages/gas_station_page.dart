@@ -424,7 +424,7 @@ class _GasStationPageState extends State<GasStationPage> {
                                                       .kOnboardingTextTheme
                                                       .copyWith(
                                                     fontSize:
-                                                        AppDimensions.height20,
+                                                        AppDimensions.height17,
                                                     fontWeight: FontWeight.bold,
                                                     letterSpacing: 0,
                                                   ),
@@ -526,6 +526,7 @@ class _GasStationPageState extends State<GasStationPage> {
                                               FaIcon(
                                                 FontAwesomeIcons
                                                     .indianRupeeSign,
+                                                size: AppDimensions.height17,
                                               ),
                                               SizedBox(
                                                 width: AppDimensions.height5,
@@ -541,7 +542,7 @@ class _GasStationPageState extends State<GasStationPage> {
                                                       .kOnboardingTextTheme
                                                       .copyWith(
                                                     fontSize:
-                                                        AppDimensions.height20,
+                                                        AppDimensions.height17,
                                                     fontWeight: FontWeight.bold,
                                                     letterSpacing: 0,
                                                   ),

@@ -8,6 +8,7 @@ class AppDimensions {
   static double height10 = deviceHeight * 0.01168;
   static double height5 = height10 / 2;
   static double height15 = deviceHeight * 0.01752;
+  static double height17 = deviceHeight * 0.01984;
   static double height20 = deviceHeight * 0.02336;
   static double height30 = deviceHeight * 0.03504;
   static double height40 = height10 * 4;
