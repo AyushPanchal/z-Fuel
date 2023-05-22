@@ -11,3 +11,4 @@ export 'dart:async';
 export 'package:google_fonts/google_fonts.dart';
 export 'back_end/models/export_models.dart';
 export 'package:location/location.dart';
+export 'package:zfuel/tests/export_tests.dart';

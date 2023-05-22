@@ -1,27 +1,31 @@
 import 'dart:convert';
 
-Order orderFromJson(String str) => Order.fromJson(json.decode(str));
+OrderModel orderFromJson(String str) => OrderModel.fromJson(json.decode(str));
 
-String orderToJson(Order data) => json.encode(data.toJson());
+String orderToJson(OrderModel data) => json.encode(data.toJson());
 
-class Order {
+class OrderModel {
   String? userId;
   String? orderId;
   String? gasStationId;
   String? gasStation;
   String? fuelType;
-  int? quantity;
+  String? fuelName;
+  double? totalAmount;
+  double? quantity;
   String? deliveryAddress;
   String? orderStatus;
   DateTime? orderDate;
   DateTime? deliveryDate;
 
-  Order({
+  OrderModel({
     this.userId,
     this.orderId,
     this.gasStationId,
+    this.fuelName,
     this.gasStation,
     this.fuelType,
+    this.totalAmount,
     this.quantity,
     this.deliveryAddress,
     this.orderStatus,
@@ -29,21 +33,19 @@ class Order {
     this.deliveryDate,
   });
 
-  factory Order.fromJson(Map<String, dynamic> json) => Order(
+  factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
         userId: json["userId"],
         orderId: json["orderId"],
         gasStationId: json["gasStationId"],
+        fuelName: json["fuelName"],
         gasStation: json["gasStation"],
         fuelType: json["fuelType"],
-        quantity: json["quantity"],
+        quantity: json["quantity"].toDouble(),
+        totalAmount: json["totalAmount"].toDouble(),
         deliveryAddress: json["deliveryAddress"],
         orderStatus: json["orderStatus"],
-        orderDate: json["orderDate"] == null
-            ? null
-            : DateTime.parse(json["orderDate"]),
-        deliveryDate: json["deliveryDate"] == null
-            ? null
-            : DateTime.parse(json["deliveryDate"]),
+        orderDate: json["orderDate"].toDate(),
+        deliveryDate: json["deliveryDate"].toDate(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -53,9 +55,11 @@ class Order {
         "gasStation": gasStation,
         "fuelType": fuelType,
         "quantity": quantity,
+        "fuelName": fuelName,
+        "totalAmount": totalAmount,
         "deliveryAddress": deliveryAddress,
         "orderStatus": orderStatus,
-        "orderDate": orderDate?.toIso8601String(),
-        "deliveryDate": deliveryDate?.toIso8601String(),
+        "orderDate": orderDate,
+        "deliveryDate": deliveryDate,
       };
 }

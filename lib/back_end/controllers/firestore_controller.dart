@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -101,5 +102,38 @@ class FirestoreController extends GetxController {
         }
       }
     });
+  }
+
+  Stream<List<OrderModel>> getFleetDriverOrders() {
+    DocumentReference fleetDriverReference =
+        _firestore.collection('FleetDriverModel').doc("4QgAaUB9ozhXKoDffrIS");
+
+    return fleetDriverReference
+        .collection("Orders")
+        .snapshots()
+        .map((snapshots) {
+      if (snapshots.docs.isEmpty) {
+        print('snapshots empty');
+        return [];
+      } else {
+        try {
+          var data = snapshots.docs
+              .map((doc) =>
+                  OrderModel.fromJson(doc.data() as Map<String, dynamic>))
+              .toList();
+          return data;
+        } catch (e) {
+          print('Error $e');
+          return [];
+        }
+      }
+    });
+
+    return Stream.empty();
+  }
+
+  /*=====CRUD FOR ORDER MODEL=====*/
+  Future<void> createOrder(OrderModel order) async {
+    await _firestore.collection("OrderModel").doc().set(order.toJson());
   }
 }
